@@ -27,6 +27,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid #65c9db; outline-offs
 .button:hover { transform: translateY(-2px); }
 .button-primary { background: var(--blue); color: #fff; box-shadow: 0 8px 18px rgb(40 100 220 / 18%); }
 .button-primary:hover { background: #1d53c2; box-shadow: 0 11px 22px rgb(40 100 220 / 23%); }
+.button-ai { margin-top: 10px; border-color: #dbe5fb; background: #f6f8ff; color: #315cb4; }
+.button-ai:hover { background: #edf2ff; }
 .button-secondary { border-color: #dce4ef; background: #fff; color: var(--navy); }
 .button-secondary:hover { background: #f7f9fd; }
 .intro-note { margin: 17px 0 0; color: #8996a8; font-size: 11px; font-weight: 600; }
@@ -56,6 +58,27 @@ button:focus-visible, a:focus-visible { outline: 3px solid #65c9db; outline-offs
 .level-card strong { font-family: var(--font-display); font-size: 14px; }
 .level-card > span { color: var(--blue); font-size: 12px; font-weight: 700; }
 .level-card small { color: #8794a6; font-size: 10px; font-weight: 500; }
+.ai-generator-screen .screen-description { margin-bottom: 23px; }
+.ai-form { width: 100%; }
+.ai-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+.ai-field { display: grid; gap: 7px; }
+.ai-field[hidden] { display: none; }
+.ai-field label, .ai-question-type strong { color: #34445e; font-size: 12px; font-weight: 700; }
+.ai-field select, .ai-field input { width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid #dfe6f0; border-radius: 7px; background: #fff; color: var(--navy); font: inherit; font-size: 13px; }
+.ai-field select:focus-visible, .ai-field input:focus-visible { outline: 3px solid rgb(101 201 219 / 50%); outline-offset: 2px; border-color: #79a1ee; }
+.ai-question-type { display: grid; gap: 5px; margin: 17px 0; }
+.ai-question-type span { color: #8290a3; font-size: 12px; }
+.ai-submit { width: 100%; }
+.ai-submit[hidden] { display: none; }
+.ai-submit:disabled { cursor: wait; opacity: .75; transform: none; }
+.ai-generator-error { margin: 12px 0; color: #b45147; font-size: 12px; line-height: 1.5; }
+.ai-generation-progress[hidden] { display: none; }
+.ai-generation-progress { width: 100%; padding: 16px; border: 1px solid #e3eaf5; border-radius: 9px; background: #f8faff; }
+.ai-generation-progress-label { display: flex; justify-content: space-between; gap: 12px; color: #34445e; font-size: 12px; font-weight: 700; }
+.ai-generation-progress-label span:last-child { color: var(--blue); font-variant-numeric: tabular-nums; }
+.ai-generation-progress-track { height: 9px; margin-top: 12px; overflow: hidden; border-radius: 9px; background: #e8edf5; }
+.ai-generation-progress-track span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--blue), var(--cyan)); transition: width .25s ease; }
+.ai-generation-progress-note { margin: 9px 0 0; color: #8290a3; font-size: 11px; }
 .question-screen { padding: 35px 42px 30px; }
 .quiz-meta { display: flex; justify-content: space-between; gap: 10px; color: #738198; font-size: 11px; font-weight: 700; text-transform: uppercase; }
 .quiz-meta > span:first-child { color: var(--blue); letter-spacing: .5px; }
@@ -107,6 +130,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid #65c9db; outline-offs
 .result-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 25px; }
 .page-footnote { margin: 18px 0 0; color: #8996a8; font-size: 11px; }
 @keyframes appear { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes spin { to { transform: rotate(360deg); } }
 @media (max-width: 600px) {
   .quiz-header { width: calc(100% - 36px); height: 66px; }
   .quiz-main { min-height: calc(100vh - 66px); padding: 17px 18px 25px; }
@@ -121,6 +145,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid #65c9db; outline-offs
   .timer-track { margin-bottom: 0; }
   .level-grid { gap: 7px; }
   .level-card { min-height: 90px; }
+  .ai-form-grid { grid-template-columns: 1fr; gap: 12px; }
   .result-actions { width: 100%; flex-direction: column; }
   .result-actions .button { width: 100%; }
 }

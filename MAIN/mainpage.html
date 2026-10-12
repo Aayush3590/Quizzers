@@ -32,6 +32,7 @@
                     <span><strong id="question-count">60</strong> built-in MCQs</span>
                 </div>
                 <button id="play-btn" class="button button-primary" type="button">Start playing <span aria-hidden="true">→</span></button>
+                <button id="ai-generator-btn" class="button button-ai" type="button"><span aria-hidden="true">✦</span> Generate Quiz with AI</button>
                 <p class="intro-note">HTML <span>·</span> CSS <span>·</span> JavaScript <span>·</span> Python <span>·</span> C++ <span>·</span> SQL</p>
             </div>
 
@@ -62,6 +63,62 @@
                 <button class="text-back" type="button" data-back="category-screen"><span aria-hidden="true">←</span> Change topic</button>
             </div>
 
+            <div id="ai-generator-screen" class="screen selection-screen ai-generator-screen" hidden>
+                <p class="eyebrow">AI-powered quiz</p>
+                <h1>Create your quiz</h1>
+                <p class="screen-description">Choose a topic and challenge level. Your questions will be generated just for this session.</p>
+                <form id="ai-generator-form" class="ai-form">
+                    <div class="ai-form-grid">
+                        <div class="ai-field">
+                            <label for="ai-topic">Topic</label>
+                            <select id="ai-topic" name="topic" required>
+                                <option value="Java">Java</option>
+                                <option value="Python">Python</option>
+                                <option value="C++">C++</option>
+                                <option value="HTML">HTML</option>
+                                <option value="CSS">CSS</option>
+                                <option value="JavaScript">JavaScript</option>
+                                <option value="General Knowledge">General Knowledge</option>
+                                <option value="Science">Science</option>
+                                <option value="History">History</option>
+                                <option value="Custom">Custom topic</option>
+                            </select>
+                        </div>
+                        <div id="custom-topic-field" class="ai-field" hidden>
+                            <label for="ai-custom-topic">Your topic</label>
+                            <input id="ai-custom-topic" name="customTopic" type="text" minlength="3" maxlength="60" placeholder="e.g. Ocean ecosystems">
+                        </div>
+                        <div class="ai-field">
+                            <label for="ai-difficulty">Difficulty</label>
+                            <select id="ai-difficulty" name="difficulty" required>
+                                <option value="Easy">Easy</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="Hard">Hard</option>
+                            </select>
+                        </div>
+                        <div class="ai-field">
+                            <label for="ai-question-count">Number of questions</label>
+                            <select id="ai-question-count" name="questionCount" required>
+                                <option value="5">5 questions</option>
+                                <option value="10" selected>10 questions</option>
+                                <option value="15">15 questions</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p class="ai-question-type"><strong>Question type</strong><span>Multiple choice · 4 options per question</span></p>
+                    <p id="ai-generator-error" class="ai-generator-error" role="alert" hidden></p>
+                    <button id="generate-quiz-btn" class="button button-primary ai-submit" type="submit">Generate Quiz with AI <span aria-hidden="true">→</span></button>
+                    <div id="ai-generation-progress" class="ai-generation-progress" role="status" aria-live="polite" hidden>
+                        <div class="ai-generation-progress-label"><span id="ai-generation-progress-text">Generating questions: 0 of 5</span><span id="ai-generation-progress-percent">0%</span></div>
+                        <div id="ai-generation-progress-track" class="ai-generation-progress-track" role="progressbar" aria-label="Questions generated" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0">
+                            <span id="ai-generation-progress-bar"></span>
+                        </div>
+                        <p class="ai-generation-progress-note">This can take a few moments.</p>
+                    </div>
+                </form>
+                <button class="text-back" type="button" data-back="start-screen"><span aria-hidden="true">←</span> Back</button>
+            </div>
+
             <div id="quiz-screen" class="screen question-screen" hidden>
                 <div class="quiz-meta"><span id="quiz-category-label">HTML · RELAXED</span><span class="question-count" id="question-count-label">Question 1 of 10</span></div>
                 <div class="question-progress" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><span id="question-progress-bar"></span></div>
@@ -86,7 +143,7 @@
                     <div class="score-percent"><strong id="final-percent">0%</strong><span>accuracy</span></div>
                 </div>
                 <div class="result-breakdown"><span><i class="result-dot correct-dot"></i><strong id="correct-count">0</strong> correct</span><span><i class="result-dot incorrect-dot"></i><strong id="incorrect-count">0</strong> incorrect</span></div>
-                <div class="result-actions"><button id="play-again-btn" class="button button-primary" type="button">Play again <span aria-hidden="true">↻</span></button><a class="button button-secondary" href="../homepage.html">Back to home</a></div>
+                <div class="result-actions"><button id="restart-quiz-btn" class="button button-primary" type="button">Restart Quiz <span aria-hidden="true">↻</span></button><button id="play-again-btn" class="button button-secondary" type="button">Choose another quiz</button><a class="button button-secondary" href="../homepage.html">Back to home</a></div>
             </div>
         </section>
         <p class="page-footnote">A little practice goes a long way.</p>

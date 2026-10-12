@@ -563,6 +563,7 @@ const screens = Array.from(document.querySelectorAll(".screen"));
 const startScreen = document.getElementById("start-screen");
 const categoryScreen = document.getElementById("category-screen");
 const levelScreen = document.getElementById("level-screen");
+const aiGeneratorScreen = document.getElementById("ai-generator-screen");
 const quizScreen = document.getElementById("quiz-screen");
 const resultsScreen = document.getElementById("results-screen");
 const questionElement = document.getElementById("question");
@@ -582,6 +583,8 @@ let score = 0;
 let timer;
 let timeLeft = questionTime;
 let answerLocked = false;
+let currentQuizQuestions = [];
+let isGeneratingQuiz = false;
 
 document.getElementById("topic-count").textContent = Object.keys(allQuestions).length;
 document.getElementById("question-count").textContent = totalQuestions;
@@ -590,6 +593,22 @@ document.querySelectorAll(".category-btn").forEach((button) => {
 });
 
 document.getElementById("play-btn").addEventListener("click", () => showScreen(categoryScreen));
+document.getElementById("ai-generator-btn").addEventListener("click", () => {
+    document.getElementById("ai-generator-error").hidden = true;
+    showScreen(aiGeneratorScreen);
+});
+
+const aiTopicSelect = document.getElementById("ai-topic");
+const customTopicField = document.getElementById("custom-topic-field");
+const customTopicInput = document.getElementById("ai-custom-topic");
+aiTopicSelect.addEventListener("change", () => {
+    const isCustomTopic = aiTopicSelect.value === "Custom";
+    customTopicField.hidden = !isCustomTopic;
+    customTopicInput.required = isCustomTopic;
+    if (!isCustomTopic) customTopicInput.value = "";
+});
+
+document.getElementById("ai-generator-form").addEventListener("submit", generateAiQuiz);
 
 document.querySelectorAll(".category-btn").forEach((button) => {
     button.addEventListener("click", () => {
@@ -618,6 +637,7 @@ document.getElementById("play-again-btn").addEventListener("click", () => {
     pace = "";
     showScreen(startScreen);
 });
+document.getElementById("restart-quiz-btn").addEventListener("click", () => startQuiz(currentQuizQuestions));
 
 function showScreen(activeScreen) {
     screens.forEach((screen) => {
@@ -625,8 +645,9 @@ function showScreen(activeScreen) {
     });
 }
 
-function startQuiz() {
-    shuffledQuestions = shuffleArray([...allQuestions[category]]);
+function startQuiz(questions = allQuestions[category]) {
+    currentQuizQuestions = [...questions];
+    shuffledQuestions = shuffleArray([...currentQuizQuestions]);
     currentQuestionIndex = 0;
     score = 0;
     showScreen(quizScreen);
@@ -685,7 +706,8 @@ function selectAnswer(selectedButton) {
         button.disabled = true;
     });
 
-    answerFeedback.textContent = isCorrect ? "Correct. Nice work!" : "Not quite. The correct answer is highlighted.";
+    const feedback = isCorrect ? "Correct. Nice work!" : "Not quite. The correct answer is highlighted.";
+    answerFeedback.textContent = currentQuestionExplanation(feedback);
     answerFeedback.classList.add(isCorrect ? "feedback-correct" : "feedback-incorrect");
     answerFeedback.hidden = false;
     nextButton.hidden = false;
@@ -758,7 +780,7 @@ function handleTimeout() {
         if (button.dataset.correct === "true") button.classList.add("correct");
         button.disabled = true;
     });
-    answerFeedback.textContent = "Time is up. The correct answer is highlighted.";
+    answerFeedback.textContent = currentQuestionExplanation("Time is up. The correct answer is highlighted.");
     answerFeedback.classList.add("feedback-incorrect");
     answerFeedback.hidden = false;
     nextButton.hidden = false;
@@ -770,4 +792,146 @@ function shuffleArray(array) {
         [array[index], array[randomIndex]] = [array[randomIndex], array[index]];
     }
     return array;
+}
+
+function currentQuestionExplanation(feedback) {
+    const explanation = shuffledQuestions[currentQuestionIndex].explanation;
+    return explanation ? `${feedback} ${explanation}` : feedback;
+}
+
+async function generateAiQuiz(event) {
+    event.preventDefault();
+    if (isGeneratingQuiz) return;
+
+    const errorMessage = document.getElementById("ai-generator-error");
+    const submitButton = document.getElementById("generate-quiz-btn");
+    const progressPanel = document.getElementById("ai-generation-progress");
+    const progressText = document.getElementById("ai-generation-progress-text");
+    const progressPercent = document.getElementById("ai-generation-progress-percent");
+    const progressTrack = document.getElementById("ai-generation-progress-track");
+    const progressBar = document.getElementById("ai-generation-progress-bar");
+    const questionCount = Number(document.getElementById("ai-question-count").value);
+    const difficulty = document.getElementById("ai-difficulty").value;
+    const selectedTopic = aiTopicSelect.value;
+    const topic = selectedTopic === "Custom" ? customTopicInput.value.trim() : selectedTopic;
+
+    errorMessage.hidden = true;
+    progressPanel.hidden = false;
+    submitButton.hidden = true;
+    progressText.textContent = `Generating questions: 0 of ${questionCount}`;
+    progressPercent.textContent = "0%";
+    progressTrack.setAttribute("aria-valuemax", questionCount);
+    progressTrack.setAttribute("aria-valuenow", "0");
+    progressBar.style.width = "0%";
+    isGeneratingQuiz = true;
+
+    try {
+        const response = await fetch("/api/generate-quiz", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                topic: selectedTopic,
+                customTopic: selectedTopic === "Custom" ? topic : undefined,
+                difficulty,
+                questionCount,
+            }),
+        });
+        const result = await readQuizGenerationStream(response, (generatedCount) => {
+            const percent = Math.round((generatedCount / questionCount) * 100);
+            progressText.textContent = `Generating questions: ${generatedCount} of ${questionCount}`;
+            progressPercent.textContent = `${percent}%`;
+            progressTrack.setAttribute("aria-valuenow", generatedCount);
+            progressBar.style.width = `${percent}%`;
+        });
+        if (!Array.isArray(result.questions) || result.questions.length === 0) {
+            throw new Error("The AI returned no questions. Please try again.");
+        }
+
+        category = topic;
+        pace = `${difficulty} · AI`;
+        questionTime = 30;
+        const questions = result.questions.map((question) => ({
+            question: question.question,
+            answers: question.options.map((text) => ({
+                text,
+                correct: text === question.correctAnswer,
+            })),
+            explanation: question.explanation,
+        }));
+        startQuiz(questions);
+    } catch (error) {
+        errorMessage.textContent = error instanceof TypeError
+            ? "Could not reach the quiz service. Make sure the Quizzers server is running and try again."
+            : error.message;
+        errorMessage.hidden = false;
+        progressPanel.hidden = true;
+        submitButton.hidden = false;
+    } finally {
+        isGeneratingQuiz = false;
+    }
+}
+
+async function readQuizGenerationStream(response, onProgress) {
+    if (!response.ok || !response.headers.get("content-type")?.includes("text/event-stream")) {
+        const responseText = await response.text();
+        let errorResponse;
+        try {
+            errorResponse = responseText ? JSON.parse(responseText) : null;
+        } catch {
+            errorResponse = null;
+        }
+        if (errorResponse && typeof errorResponse.error === "string") {
+            throw new Error(errorResponse.error);
+        }
+        throw new Error(response.ok
+            ? "The quiz service returned an unreadable response. Please try again."
+            : `The quiz service returned an unreadable error (HTTP ${response.status}). Restart the Quizzers server and try again.`);
+    }
+
+    if (!response.body) throw new Error("The quiz service did not provide a progress stream. Please restart Quizzers and try again.");
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let quiz;
+
+    function processEvent(eventText) {
+        const data = eventText
+            .split(/\r?\n/)
+            .filter((line) => line.startsWith("data:"))
+            .map((line) => line.slice(5).trimStart())
+            .join("\n");
+        if (!data) return;
+
+        let event;
+        try {
+            event = JSON.parse(data);
+        } catch {
+            throw new Error("The quiz service sent an invalid progress update. Please try again.");
+        }
+        if (event.type === "progress" && Number.isInteger(event.generatedCount)) {
+            onProgress(event.generatedCount);
+        } else if (event.type === "complete" && event.quiz) {
+            quiz = event.quiz;
+        } else if (event.type === "error") {
+            throw new Error(event.error || "Quiz generation failed. Please try again.");
+        }
+    }
+
+    try {
+        while (true) {
+            const { done, value } = await reader.read();
+            buffer += decoder.decode(value, { stream: !done });
+            const events = buffer.split(/\r?\n\r?\n/);
+            buffer = events.pop() || "";
+            events.forEach(processEvent);
+            if (done) break;
+        }
+        if (buffer.trim()) processEvent(buffer);
+    } catch (error) {
+        await reader.cancel().catch(() => {});
+        throw error;
+    }
+    if (!quiz) throw new Error("Quiz generation ended before all questions were ready. Please try again.");
+    return quiz;
 }
