@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f6f9ff">
+    <title>Log in | QUIZZERS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <main class="auth-shell">
+        <section class="auth-story" aria-label="About QUIZZERS">
+            <a class="brand brand-light" href="../homepage.html" aria-label="QUIZZERS home">
+                <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+                <span>QUIZZERS</span>
+            </a>
+            <div class="story-copy">
+                <p class="story-kicker">PRACTICE. IMPROVE. SUCCEED.</p>
+                <h1>Small quizzes.<br>Real progress.</h1>
+                <p>Build confidence one question at a time with focused practice across the fundamentals of coding.</p>
+            </div>
+            <div class="story-preview" aria-label="Available quiz subjects">
+                <div class="preview-heading"><span class="preview-symbol">&lt;/&gt;</span><span><strong>Your next session</strong><small>Pick a subject and begin</small></span></div>
+                <div class="subject-chips"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Python</span><span>C++</span><span>SQL</span></div>
+                <div class="preview-line"><span></span><small>Six subjects · instant feedback</small></div>
+            </div>
+            <a class="story-about" href="../ABOUT/about.html">Meet the team <span aria-hidden="true">↗</span></a>
+        </section>
+
+        <section class="auth-panel" aria-labelledby="form-title">
+            <a class="panel-home" href="../homepage.html"><span aria-hidden="true">←</span> Back to home</a>
+            <div class="auth-content">
+                <p class="eyebrow">Welcome back</p>
+                <h2 id="form-title">Log in to QUIZZERS</h2>
+                <p class="form-intro">Pick up where you left off and get back to practice.</p>
+                <form id="login-form" novalidate>
+                    <div class="field-group">
+                        <label for="username">Username</label>
+                        <input id="username" name="username" type="text" placeholder="Enter your username" autocomplete="username" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="password">Password</label>
+                        <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+                    </div>
+                    <label class="check-row"><input type="checkbox" id="show-password"><span>Show password</span></label>
+                    <p class="form-message" id="login-message" role="status" aria-live="polite" hidden></p>
+                    <button class="auth-submit" type="submit">Log in <span aria-hidden="true">→</span></button>
+                </form>
+                <p class="account-switch">New to QUIZZERS? <a href="sign_up.html">Create an account</a></p>
+                <p class="panel-note demo-warning">Demo only: your password is stored in plain text in this browser. Don’t use a real password.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const loginForm = document.getElementById("login-form");
+        const loginMessage = document.getElementById("login-message");
+        const passwordField = document.getElementById("password");
+
+        document.getElementById("show-password").addEventListener("change", (event) => {
+            passwordField.type = event.currentTarget.checked ? "text" : "password";
+        });
+
+        loginForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const username = document.getElementById("username").value.trim();
+            const password = passwordField.value;
+            let users;
+
+            if (!username || !password) {
+                showLoginMessage("Enter both your username and password.", false);
+                return;
+            }
+
+            try {
+                users = JSON.parse(localStorage.getItem("users")) || {};
+            } catch {
+                showLoginMessage("Saved account data could not be read. Create the account again.", false);
+                return;
+            }
+
+            if (!users[username] || users[username].password !== password) {
+                showLoginMessage("That username and password do not match.", false);
+                return;
+            }
+
+            showLoginMessage("You're signed in. Opening QUIZZERS…", true);
+            window.location.href = "../MAIN/mainpage.html";
+        });
+
+        function showLoginMessage(message, isSuccess) {
+            loginMessage.textContent = message;
+            loginMessage.className = `form-message ${isSuccess ? "message-success" : "message-error"}`;
+            loginMessage.hidden = false;
+        }
+    </script>
+</body>
+
+</html>

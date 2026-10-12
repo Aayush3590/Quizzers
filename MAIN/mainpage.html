@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f6f9ff">
+    <title>Play a Quiz | QUIZZERS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="mainpage.css">
+</head>
+<body>
+    <header class="quiz-header">
+        <a class="brand" href="../homepage.html" aria-label="QUIZZERS home">
+            <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+            <span>QUIZZERS</span>
+        </a>
+        <a class="header-back" href="../homepage.html"><span aria-hidden="true">←</span> Back to home</a>
+    </header>
+
+    <main class="quiz-main">
+        <section class="app" aria-live="polite">
+            <div id="start-screen" class="screen intro-screen">
+                <span class="intro-symbol" aria-hidden="true">&lt;/&gt;</span>
+                <p class="eyebrow">Multiple-choice quiz game</p>
+                <h1>Ready to test<br>what you know?</h1>
+                <p class="screen-description">Choose a programming topic and answer quick multiple-choice questions. No coding required.</p>
+                <div class="intro-facts">
+                    <span><strong id="topic-count">6</strong> topics</span>
+                    <span class="fact-dot" aria-hidden="true"></span>
+                    <span><strong id="question-count">60</strong> built-in MCQs</span>
+                </div>
+                <button id="play-btn" class="button button-primary" type="button">Start playing <span aria-hidden="true">→</span></button>
+                <p class="intro-note">HTML <span>·</span> CSS <span>·</span> JavaScript <span>·</span> Python <span>·</span> C++ <span>·</span> SQL</p>
+            </div>
+
+            <div id="category-screen" class="screen selection-screen" hidden>
+                <p class="eyebrow">Step 1 of 2</p>
+                <h1>Choose a topic</h1>
+                <p class="screen-description">Choose a programming topic for your multiple-choice quiz.</p>
+                <div class="choice-grid">
+                    <button class="choice-card category-btn" type="button" data-category="HTML"><span class="choice-icon html-icon">&lt;/&gt;</span><span><strong>HTML</strong><small><span class="category-count">10</span> questions</small></span><span class="choice-arrow" aria-hidden="true">→</span></button>
+                    <button class="choice-card category-btn" type="button" data-category="CSS"><span class="choice-icon css-icon">#</span><span><strong>CSS</strong><small><span class="category-count">10</span> questions</small></span><span class="choice-arrow" aria-hidden="true">→</span></button>
+                    <button class="choice-card category-btn" type="button" data-category="JavaScript"><span class="choice-icon js-icon">JS</span><span><strong>JavaScript</strong><small><span class="category-count">10</span> questions</small></span><span class="choice-arrow" aria-hidden="true">→</span></button>
+                    <button class="choice-card category-btn" type="button" data-category="Python"><span class="choice-icon python-icon">Py</span><span><strong>Python</strong><small><span class="category-count">10</span> questions</small></span><span class="choice-arrow" aria-hidden="true">→</span></button>
+                    <button class="choice-card category-btn" type="button" data-category="C++"><span class="choice-icon cpp-icon">C++</span><span><strong>C++</strong><small><span class="category-count">10</span> questions</small></span><span class="choice-arrow" aria-hidden="true">→</span></button>
+                    <button class="choice-card category-btn" type="button" data-category="SQL"><span class="choice-icon sql-icon">SQL</span><span><strong>SQL</strong><small><span class="category-count">10</span> questions</small></span><span class="choice-arrow" aria-hidden="true">→</span></button>
+                </div>
+                <button class="text-back" type="button" data-back="start-screen"><span aria-hidden="true">←</span> Back</button>
+            </div>
+
+            <div id="level-screen" class="screen selection-screen" hidden>
+                <p class="eyebrow">Step 2 of 2 <span class="eyebrow-separator">/</span> <span id="chosen-category">HTML</span></p>
+                <h1>Choose your timer</h1>
+                <p class="screen-description">Questions are the same at every pace; choose how much time you want for each answer.</p>
+                <div class="level-grid">
+                    <button class="level-card level-btn" type="button" data-level="Relaxed" data-seconds="45"><strong>Relaxed</strong><span>45 sec <small>per question</small></span></button>
+                    <button class="level-card level-btn" type="button" data-level="Standard" data-seconds="30"><strong>Standard</strong><span>30 sec <small>per question</small></span></button>
+                    <button class="level-card level-btn" type="button" data-level="Quick" data-seconds="15"><strong>Quick</strong><span>15 sec <small>per question</small></span></button>
+                </div>
+                <button class="text-back" type="button" data-back="category-screen"><span aria-hidden="true">←</span> Change topic</button>
+            </div>
+
+            <div id="quiz-screen" class="screen question-screen" hidden>
+                <div class="quiz-meta"><span id="quiz-category-label">HTML · RELAXED</span><span class="question-count" id="question-count-label">Question 1 of 10</span></div>
+                <div class="question-progress" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><span id="question-progress-bar"></span></div>
+                <h1 id="question">Question will appear here</h1>
+                <p class="answer-prompt">Select one answer</p>
+                <div id="answer-buttons" class="answer-list"></div>
+                <p id="answer-feedback" class="answer-feedback" role="status" hidden></p>
+                <div class="question-bottom">
+                    <div class="timer-wrap"><span class="timer-label">Time remaining</span><span class="timer-value"><span id="timer">30</span><small> sec</small></span></div>
+                    <div class="timer-track"><span id="timer-progress"></span></div>
+                    <button id="next-btn" class="button button-primary next-button" type="button" hidden>Next question <span aria-hidden="true">→</span></button>
+                </div>
+            </div>
+
+            <div id="results-screen" class="screen results-screen" hidden>
+                <span class="result-icon" aria-hidden="true">✓</span>
+                <p class="eyebrow">Session complete <span class="eyebrow-separator">/</span> <span id="result-category">HTML</span></p>
+                <h1 id="result-title">Nice work!</h1>
+                <p id="result-message" class="screen-description">Here is how you did.</p>
+                <div class="score-panel">
+                    <div class="score-total"><strong id="final-score">0</strong><span>out of <span id="final-total">10</span> correct</span></div>
+                    <div class="score-percent"><strong id="final-percent">0%</strong><span>accuracy</span></div>
+                </div>
+                <div class="result-breakdown"><span><i class="result-dot correct-dot"></i><strong id="correct-count">0</strong> correct</span><span><i class="result-dot incorrect-dot"></i><strong id="incorrect-count">0</strong> incorrect</span></div>
+                <div class="result-actions"><button id="play-again-btn" class="button button-primary" type="button">Play again <span aria-hidden="true">↻</span></button><a class="button button-secondary" href="../homepage.html">Back to home</a></div>
+            </div>
+        </section>
+        <p class="page-footnote">A little practice goes a long way.</p>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

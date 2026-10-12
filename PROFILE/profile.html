@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f6f9ff">
+  <title>My Quiz Results | QUIZZERS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-wrap" aria-label="Main navigation">
+      <a class="brand" href="../homepage.html" aria-label="QUIZZERS home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span>QUIZZERS</span>
+      </a>
+      <div class="header-actions">
+        <a class="back-link" href="../homepage.html">Home</a>
+                <a class="button" href="../LOGIN_SIGN.UP/Index.html">Play Quiz <span aria-hidden="true">→</span></a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="history-main">
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">MY ACTIVITY</p>
+        <h1>Quiz results</h1>
+        <p class="page-description">Your recent quiz attempts saved in this browser.</p>
+      </div>
+      <button id="clear-history" class="clear-button" type="button" disabled>Clear history</button>
+    </div>
+
+    <section class="summary-grid" aria-label="Quiz history summary">
+      <article class="summary-item"><span>Saved attempts</span><strong id="attempt-count">0</strong></article>
+      <article class="summary-item"><span>Average accuracy</span><strong id="average-score">0%</strong></article>
+      <article class="summary-item"><span>Best accuracy</span><strong id="best-score">0%</strong></article>
+    </section>
+
+    <section class="history-section" aria-labelledby="history-title">
+      <div class="history-heading"><h2 id="history-title">Recent quizzes</h2><span id="history-count">0 results</span></div>
+      <p id="history-status" class="history-status" role="status" aria-live="polite" hidden></p>
+      <div id="empty-state" class="empty-state">
+        <span class="empty-mark" aria-hidden="true">Q.</span>
+        <h3>No quiz results yet</h3>
+        <p>Complete a quiz and your score will appear here.</p>
+                <a class="button" href="../LOGIN_SIGN.UP/Index.html">Start a quiz <span aria-hidden="true">→</span></a>
+      </div>
+      <div id="history-table-wrap" class="table-wrap" hidden>
+        <table>
+          <thead><tr><th scope="col">Topic</th><th scope="col">Timer</th><th scope="col">Score</th><th scope="col">Accuracy</th><th scope="col">Completed</th></tr></thead>
+          <tbody id="history-rows"></tbody>
+        </table>
+      </div>
+    </section>
+    <p class="storage-note">Results are stored locally in this browser and aren’t synced between devices.</p>
+  </main>
+
+  <script>
+    const historyKey = "quizHistory";
+    const historyRows = document.getElementById("history-rows");
+    const emptyState = document.getElementById("empty-state");
+    const tableWrap = document.getElementById("history-table-wrap");
+    const clearButton = document.getElementById("clear-history");
+    const statusMessage = document.getElementById("history-status");
+
+    function loadAttempts() {
+      try {
+        const attempts = JSON.parse(localStorage.getItem(historyKey)) || [];
+        return Array.isArray(attempts) ? attempts : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function addCell(row, value, className = "") {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      if (className) cell.className = className;
+      row.appendChild(cell);
+    }
+
+    function renderHistory() {
+      const attempts = loadAttempts();
+      const count = attempts.length;
+      const average = count ? Math.round(attempts.reduce((total, item) => total + Number(item.percentage || 0), 0) / count) : 0;
+      const best = count ? Math.max(...attempts.map((item) => Number(item.percentage || 0))) : 0;
+
+      document.getElementById("attempt-count").textContent = count;
+      document.getElementById("average-score").textContent = `${average}%`;
+      document.getElementById("best-score").textContent = `${best}%`;
+      document.getElementById("history-count").textContent = `${count} ${count === 1 ? "result" : "results"}`;
+      clearButton.disabled = count === 0;
+      emptyState.hidden = count > 0;
+      tableWrap.hidden = count === 0;
+      historyRows.replaceChildren();
+
+      attempts.forEach((attempt) => {
+        const row = document.createElement("tr");
+        const completed = new Date(attempt.completedAt);
+        addCell(row, attempt.category || "Quiz");
+        addCell(row, attempt.pace || "Standard");
+        addCell(row, `${attempt.score} / ${attempt.total}`);
+        addCell(row, `${attempt.percentage}%`, "accuracy-cell");
+        addCell(row, Number.isNaN(completed.getTime()) ? "Unknown" : completed.toLocaleString());
+        historyRows.appendChild(row);
+      });
+    }
+
+    clearButton.addEventListener("click", () => {
+      try {
+        localStorage.removeItem(historyKey);
+        statusMessage.textContent = "Quiz history cleared.";
+        statusMessage.hidden = false;
+        renderHistory();
+      } catch {
+        statusMessage.textContent = "This browser could not clear local quiz history.";
+        statusMessage.hidden = false;
+      }
+    });
+
+    renderHistory();
+  </script>
+</body>
+</html>

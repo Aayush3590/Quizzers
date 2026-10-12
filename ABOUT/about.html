@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f9fc">
+    <title>About QUIZZERS | Multiple-choice programming quizzes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="about.css">
+</head>
+<body>
+    <header class="site-header">
+        <nav class="nav-wrap" aria-label="Main navigation">
+            <a class="brand" href="../homepage.html" aria-label="QUIZZERS home">
+                <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+                <span>QUIZZERS</span>
+            </a>
+            <div class="nav-links">
+                <a href="../homepage.html">Home</a>
+                <a class="active" href="#about">About</a>
+                <a href="#approach">How it works</a>
+                <a href="#team">The team</a>
+            </div>
+            <a class="button button-small" href="../LOGIN_SIGN.UP/Index.html">Play Quiz <span aria-hidden="true">→</span></a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="about-hero" id="about" aria-labelledby="hero-title">
+            <div class="hero-inner section-wrap">
+                <div class="hero-copy">
+                    <p class="eyebrow"><span class="eyebrow-dot"></span> About QUIZZERS</p>
+                    <h1>Test what you know, <span>one question at a time.</span></h1>
+                    <p class="hero-description">QUIZZERS is a multiple-choice quiz game about programming topics. Choose a quiz, select your answers, and get immediate feedback as you play.</p>
+                    <div class="hero-actions">
+                        <a class="button" href="../LOGIN_SIGN.UP/Index.html">Explore the quizzes <span aria-hidden="true">→</span></a>
+                        <a class="hero-text-link" href="#approach">How it works <span aria-hidden="true">↓</span></a>
+                    </div>
+                    <div class="library-facts" aria-label="Quiz library totals">
+                        <div><strong>06</strong><span>quiz topics</span></div>
+                        <div><strong>60</strong><span>multiple-choice questions</span></div>
+                        <div><strong>03</strong><span>timer presets</span></div>
+                    </div>
+                </div>
+
+                <aside class="quiz-preview" aria-label="Example multiple-choice question from the HTML quiz">
+                    <div class="preview-topline">
+                        <div class="preview-course"><span class="preview-symbol">&lt;/&gt;</span><span><strong>HTML fundamentals</strong><small>Multiple-choice sample</small></span></div>
+                        <span class="preview-count">01 <span>/ 10</span></span>
+                    </div>
+                    <div class="preview-progress" aria-hidden="true"><span></span></div>
+                    <h2>Which element represents the main content of a page?</h2>
+                    <div class="preview-answer is-correct"><span>A</span><code>&lt;main&gt;</code><b aria-label="Correct answer">✓</b></div>
+                    <div class="preview-answer"><span>B</span><code>&lt;aside&gt;</code></div>
+                    <div class="preview-answer"><span>C</span><code>&lt;footer&gt;</code></div>
+                    <div class="preview-feedback"><span aria-hidden="true">✓</span><span><strong>Instant feedback</strong><small>See the correct answer as you go</small></span></div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="story-section section-wrap" aria-labelledby="story-title">
+            <div class="story-label"><span>01</span><span>WHY WE MADE IT</span></div>
+            <div class="story-copy-block">
+                    <h2 id="story-title">A simple way to check what you know.</h2>
+                <div class="story-body">
+                    <p>QUIZZERS is for answering multiple-choice questions about programming concepts. It turns familiar topics into short quizzes, so you can check your understanding without needing to write or run code.</p>
+                    <p>Built as a student project, it keeps the experience straightforward: pick a topic, answer questions, get feedback, and see your score.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="approach-section" id="approach" aria-labelledby="approach-title">
+            <div class="section-wrap">
+                <div class="section-heading">
+                    <div><p class="eyebrow">A simple quiz flow</p><h2 id="approach-title">Choose. Answer. See your score.</h2></div>
+                    <p>No editor or setup, just multiple-choice quizzes.</p>
+                </div>
+                <div class="approach-grid">
+                    <article><span class="step-number">01</span><h3>Choose a quiz topic</h3><p>Pick HTML, CSS, JavaScript, Python, C++, or SQL.</p></article>
+                    <article><span class="step-number">02</span><h3>Select your answers</h3><p>Answer each multiple-choice question before its timer runs out.</p></article>
+                    <article><span class="step-number">03</span><h3>See how you did</h3><p>Get answer feedback as you go and your score at the end.</p></article>
+                </div>
+            </div>
+        </section>
+
+        <section class="team-section section-wrap" id="team" aria-labelledby="team-title">
+            <div class="team-heading">
+                <div><p class="eyebrow">Made by students</p><h2 id="team-title">The people behind QUIZZERS.</h2></div>
+                <p>A student project built around a shared idea: make programming quizzes clear, focused, and fun to play.</p>
+            </div>
+            <ul class="team-list">
+                <li><img src="../IMAGES/aayush.jpg" alt="" loading="lazy"><span>Aayush</span><span class="team-role">Project team</span></li>
+                <li><img src="../IMAGES/vansh.jpg" alt="" loading="lazy"><span>Vanshdeep Verma</span><span class="team-role">Project team</span></li>
+                <li><img src="../IMAGES/abhishek.jpg" alt="" loading="lazy"><span>Abhishek Kumar</span><span class="team-role">Project team</span></li>
+            </ul>
+        </section>
+
+        <section class="closing section-wrap" aria-labelledby="closing-title">
+            <div><p class="eyebrow">Your next session starts here</p><h2 id="closing-title">Ready to put your knowledge to work?</h2></div>
+            <a class="button" href="../LOGIN_SIGN.UP/Index.html">Start a quiz <span aria-hidden="true">→</span></a>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <a class="brand footer-brand" href="../homepage.html"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>QUIZZERS</span></a>
+            <p>Practice. Improve. Succeed.</p>
+            <div class="footer-links"><a href="../homepage.html">Home</a><a href="../LOGIN_SIGN.UP/Index.html">Play Quiz</a></div>
+        </div>
+    </footer>
+</body>
+</html>

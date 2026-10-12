@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f6f9ff">
+    <title>Create an account | QUIZZERS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <main class="auth-shell signup-shell">
+        <section class="auth-story" aria-label="About QUIZZERS">
+            <a class="brand brand-light" href="../homepage.html" aria-label="QUIZZERS home">
+                <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+                <span>QUIZZERS</span>
+            </a>
+            <div class="story-copy">
+                <p class="story-kicker">YOUR NEXT PRACTICE SESSION</p>
+                <h1>Start with what<br>you want to learn.</h1>
+                <p>Create a local demo account and explore bite-sized multiple-choice quizzes at your own pace.</p>
+            </div>
+            <div class="story-preview" aria-label="Available quiz subjects">
+                <div class="preview-heading"><span class="preview-symbol">Q.</span><span><strong>One place to practice</strong><small>Six subjects, one clear flow</small></span></div>
+                <div class="subject-chips"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Python</span><span>C++</span><span>SQL</span></div>
+                <div class="preview-line"><span></span><small>Choose a timer that fits you</small></div>
+            </div>
+            <a class="story-about" href="../ABOUT/about.html">Meet the team <span aria-hidden="true">↗</span></a>
+        </section>
+
+        <section class="auth-panel signup-panel" aria-labelledby="form-title">
+            <a class="panel-home" href="../homepage.html"><span aria-hidden="true">←</span> Back to home</a>
+            <div class="auth-content">
+                <p class="eyebrow">Join the practice</p>
+                <h2 id="form-title">Create your account</h2>
+                <p class="form-intro">A few details, then you’re ready to start.</p>
+                <form id="signup-form" novalidate>
+                    <div class="field-group">
+                        <label for="username">Name</label>
+                        <input id="username" name="username" type="text" placeholder="Enter your name" autocomplete="username" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="mobile">Mobile number</label>
+                        <input id="mobile" name="mobile" type="tel" inputmode="tel" placeholder="Enter your mobile number" autocomplete="tel" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="email">Email address</label>
+                        <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+                    </div>
+                    <div class="field-pair">
+                        <div class="field-group">
+                            <label for="password">Create password</label>
+                            <input id="password" name="password" type="password" placeholder="Create a password" autocomplete="new-password" required>
+                        </div>
+                        <div class="field-group">
+                            <label for="confirmPassword">Confirm password</label>
+                            <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Repeat password" autocomplete="new-password" required>
+                        </div>
+                    </div>
+                    <label class="check-row"><input type="checkbox" id="show-password"><span>Show passwords</span></label>
+                    <p class="form-message" id="signup-message" role="status" aria-live="polite" hidden></p>
+                    <button class="auth-submit" type="submit">Create account <span aria-hidden="true">→</span></button>
+                </form>
+                <p class="account-switch">Already have an account? <a href="Index.html">Log in</a></p>
+                <p class="panel-note demo-warning">Demo only: your account and plaintext password are stored in this browser. Don’t use real personal details.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const signupForm = document.getElementById("signup-form");
+        const signupMessage = document.getElementById("signup-message");
+        const passwordField = document.getElementById("password");
+        const confirmPasswordField = document.getElementById("confirmPassword");
+
+        document.getElementById("show-password").addEventListener("change", (event) => {
+            const fieldType = event.currentTarget.checked ? "text" : "password";
+            passwordField.type = fieldType;
+            confirmPasswordField.type = fieldType;
+        });
+
+        signupForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const username = document.getElementById("username").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const mobile = document.getElementById("mobile").value.trim();
+            const password = passwordField.value;
+            const confirmPassword = confirmPasswordField.value;
+
+            if (!username || !email || !mobile || !password || !confirmPassword) {
+                showSignupMessage("Complete each field to create your account.", false);
+                return;
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showSignupMessage("Enter a valid email address.", false);
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showSignupMessage("Those passwords do not match yet.", false);
+                return;
+            }
+
+            try {
+                const users = JSON.parse(localStorage.getItem("users")) || {};
+                if (users[username] || Object.values(users).some((user) => user.email === email)) {
+                    showSignupMessage("An account already uses that name or email. Try logging in.", false);
+                    return;
+                }
+
+                users[username] = { username, email, password, mobile };
+                localStorage.setItem("users", JSON.stringify(users));
+            } catch {
+                showSignupMessage("This browser could not save your account. Check its storage settings.", false);
+                return;
+            }
+
+            showSignupMessage("Account created. Taking you to log in…", true);
+            window.setTimeout(() => {
+                window.location.href = "Index.html";
+            }, 700);
+        });
+
+        function showSignupMessage(message, isSuccess) {
+            signupMessage.textContent = message;
+            signupMessage.className = `form-message ${isSuccess ? "message-success" : "message-error"}`;
+            signupMessage.hidden = false;
+        }
+    </script>
+</body>
+
+</html>
